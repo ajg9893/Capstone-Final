@@ -1,10 +1,10 @@
-# 🎓 FaceCheck — Dual-Factor Biometric Attendance System
+# FaceCheck — Dual-Factor Biometric Attendance System
 
 > A smart school check-in system that replaces manual ID scanning with dual-factor verification — matching each student's live face to their yearbook photo and ID barcode automatically, with a real-time attendance dashboard for security and teachers.
 
 ---
 
-## 📌 Overview
+## Overview
 
 FaceCheck is a biometric attendance system built for high school environments. Instead of manually scanning IDs or relying on teachers to take attendance, students simply walk up to a check-in station, scan their school ID barcode, and look at the camera. The system simultaneously verifies their identity using facial recognition and logs their arrival — flagging anyone who arrives after the tardy threshold.
 
@@ -12,7 +12,7 @@ This project was inspired by dual-factor biometric verification systems used in 
 
 ---
 
-## 🚀 Features
+## Features
 
 - **Dual-Factor Verification** — Combines barcode scanning and live facial recognition to confirm identity, preventing ID sharing or misuse
 - **Real-Time Check-In Logging** — Every check-in is timestamped and written to Firebase instantly
@@ -23,7 +23,7 @@ This project was inspired by dual-factor biometric verification systems used in 
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Layer | Technology |
 |---|---|
@@ -37,7 +37,7 @@ This project was inspired by dual-factor biometric verification systems used in 
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 facecheck/
@@ -65,7 +65,7 @@ facecheck/
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 ### Verification Flow
 1. Student approaches the check-in station
@@ -73,8 +73,8 @@ facecheck/
 3. System fetches the student's record and yearbook photo from Firebase
 4. Webcam captures a live frame of the student's face
 5. DeepFace compares the live face to the stored yearbook photo
-6. If confidence score exceeds threshold → **Verified** ✅
-7. If faces don't match → **Mismatch flagged** 🚨
+6. If confidence score exceeds threshold → **Verified**
+7. If faces don't match → **Mismatch flagged**
 8. Result is logged to Firestore with a timestamp and present/tardy status
 
 ### Tardy Logic
@@ -84,7 +84,7 @@ facecheck/
 
 ---
 
-## 🖥️ Setup & Installation
+## Setup & Installation
 
 ### Prerequisites
 - Python 3.9+
@@ -139,7 +139,7 @@ npm run dev
 
 ---
 
-## 📊 Admin Dashboard
+## Admin Dashboard
 
 The admin dashboard is accessible to security staff and teachers and includes:
 
@@ -151,7 +151,7 @@ The admin dashboard is accessible to security staff and teachers and includes:
 
 ---
 
-## 🔮 Future Work
+## Future Work
 
 - **Genesis SIS Integration** — In a full school deployment, this system would connect to the Genesis Student Information System via API, automatically syncing attendance records and eliminating the need for teachers to take attendance manually
 - **Mobile Teacher View** — A lightweight mobile interface for teachers to check their class roster from anywhere
@@ -168,6 +168,6 @@ This project was built as a Computer Science Capstone project at South Brunswick
 
 ## 👤 Author
 
-Built by [Your Name] · South Brunswick High School · Class of 2026
+Built by Arjun Gilhotra · South Brunswick High School · Class of 2026
 
 *Capstone Project — Computer Science*
