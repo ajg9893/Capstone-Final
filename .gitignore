@@ -1,0 +1,9 @@
+serviceAccountKey.json
+.env
+__pycache__/
+*.pyc
+.DS_Store
+photos/temp/
+.venv/
+dashboard/node_modules/
+dashboard/dist/
