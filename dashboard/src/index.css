@@ -1,0 +1,170 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: #f0f2f5;
+  color: #1a1a2e;
+  min-height: 100vh;
+}
+
+/* ── Layout ─────────────────────────────────────────── */
+.app { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+/* ── Header ─────────────────────────────────────────── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+.header-left h1 { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; }
+.header-left h1 span { color: #4f46e5; }
+.header-left p { font-size: 0.85rem; color: #6b7280; margin-top: 2px; }
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+/* ── Session button ─────────────────────────────────── */
+.btn {
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.85; }
+.btn-start { background: #4f46e5; color: #fff; }
+.btn-stop  { background: #ef4444; color: #fff; }
+
+.session-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 99px;
+}
+.session-badge.active   { background: #dcfce7; color: #15803d; }
+.session-badge.inactive { background: #f3f4f6; color: #6b7280; }
+.dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+}
+.dot.active   { background: #16a34a; animation: pulse 1.5s infinite; }
+.dot.inactive { background: #9ca3af; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+/* ── Stats bar ──────────────────────────────────────── */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.stat-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+}
+.stat-card .label { font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: #6b7280; }
+.stat-card .value { font-size: 2rem; font-weight: 700; margin-top: 4px; }
+.stat-card.present .value { color: #16a34a; }
+.stat-card.tardy   .value { color: #d97706; }
+.stat-card.absent  .value { color: #ef4444; }
+
+/* ── Panel ──────────────────────────────────────────── */
+.panel {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.07);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f3f4f6;
+}
+.panel-header h2 { font-size: 0.95rem; font-weight: 700; }
+.panel-header .subtitle { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
+
+/* ── Filters ────────────────────────────────────────── */
+.filters { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.filter-btn {
+  padding: 5px 14px;
+  border-radius: 99px;
+  border: 1.5px solid #e5e7eb;
+  background: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.15s;
+}
+.filter-btn.active { background: #4f46e5; border-color: #4f46e5; color: #fff; }
+
+.homeroom-select {
+  padding: 5px 10px;
+  border-radius: 8px;
+  border: 1.5px solid #e5e7eb;
+  font-size: 0.78rem;
+  color: #374151;
+  background: #fff;
+  cursor: pointer;
+}
+
+/* ── Table ──────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  text-align: left;
+  padding: 10px 20px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  color: #6b7280;
+  background: #f9fafb;
+  border-bottom: 1px solid #f3f4f6;
+}
+tbody tr { border-bottom: 1px solid #f9fafb; transition: background 0.1s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #f9fafb; }
+tbody td { padding: 12px 20px; font-size: 0.875rem; }
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.badge.present { background: #dcfce7; color: #15803d; }
+.badge.tardy   { background: #fef3c7; color: #92400e; }
+.badge.mismatch { background: #fee2e2; color: #991b1b; }
+
+.empty { padding: 32px 20px; text-align: center; color: #9ca3af; font-size: 0.875rem; }
+
+/* ── Absent list ────────────────────────────────────── */
+.absent-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 16px 20px;
+}
+.absent-chip {
+  background: #f3f4f6;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  color: #374151;
+}
+.absent-chip span { font-weight: 600; }
