@@ -9,36 +9,30 @@
 from firebase_client import db, bucket
 
 # ── Change this for each student ─────────────────────────────────────────────
-STUDENT_ID = "10019901"   # Saksham Dixit
-#            "10019903"   # Sanjit Aita
-#            "10019895"   # Aditya Pathak
+STUDENT_ID = "30002516"   # Saksham Dixit
+#            "10019810"   # Sanjit Aita
+#            "10021472"   # Aditya Pathak
 # ─────────────────────────────────────────────────────────────────────────────
 
 PHOTO_PATH = f"photos/{STUDENT_ID}.jpg"
 
 if __name__ == "__main__":
-    # Verify the student exists and grab their info
     doc = db.collection("students").document(STUDENT_ID).get()
     if not doc.exists:
-        print(f"❌ No student record found for ID {STUDENT_ID}. Run add_students_batch.py first.")
+        print(f"No student record found for ID {STUDENT_ID}. Run add_students_batch.py first.")
         raise SystemExit(1)
 
-    student = doc.to_dict()
+    name = doc.to_dict().get("name", STUDENT_ID)
 
     # Upload photo to Firebase Storage
-    print(f"⬆️  Uploading photo for {student['name']} ({STUDENT_ID})...")
+    print(f"Uploading photo for {name} ({STUDENT_ID})...")
     blob = bucket.blob(f"photos/{STUDENT_ID}.jpg")
     blob.upload_from_filename(PHOTO_PATH)
     blob.make_public()
     photo_url = blob.public_url
 
-    # Write back to Firestore — merge=True so no other fields are touched
-    db.collection("students").document(STUDENT_ID).set({
-        "studentId": student["studentId"],
-        "name":      student["name"],
-        "grade":     student["grade"],
-        "photoUrl":  photo_url,
-    }, merge=True)
+    # Write the URL back to the student's Firestore document
+    db.collection("students").document(STUDENT_ID).update({"photoUrl": photo_url})
 
-    print(f"✅ Done — photoUrl saved for {student['name']}")
+    print(f"Done — photoUrl saved for {name}")
     print(f"   {photo_url}")
