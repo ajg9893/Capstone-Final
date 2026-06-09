@@ -37,8 +37,7 @@ FinalProject/
 ├── barcode_reader.py      # USB barcode scanner input
 ├── firebase_client.py     # All Firestore / Storage operations
 ├── app.py                 # Flask REST API (port 5000)
-├── add_students_batch.py  # Bulk-enroll a class roster
-├── add_student.py         # One-time enrollment for a single student
+├── add_student.py         # Add a single student (with or without a photo)
 ├── upload_photo.py        # Upload a photo for an already-enrolled student
 ├── requirements.txt
 ├── .env                   # Secret config (not committed)
@@ -130,19 +129,19 @@ Then open [http://localhost:5173](http://localhost:5173) in a browser, click **S
 
 ## Enrolling Students
 
-### Add a class roster (no photos)
+### Add a new student
 
-Edit the `STUDENTS` list in `add_students_batch.py`, then run:
+Fill in `STUDENT_ID`, `NAME`, `GRADE`, and optionally `PHOTO_PATH` at the top of `add_student.py`, then run:
 
 ```bash
-python add_students_batch.py
+python add_student.py
 ```
 
-Students without photos will still appear on the dashboard and can check in — face verification is simply skipped for them.
+Leave `PHOTO_PATH` blank to add the student without a photo — they will still appear on the dashboard and can check in (face verification is skipped until a photo is added).
 
-### Upload a photo for a student
+### Upload or update a photo for an existing student
 
-1. Place the photo at `photos/<student_id>.jpg`
+1. Place the photo at `photos/<student_id>.jpg` (PNG is also accepted and auto-converted)
 2. Set `STUDENT_ID` at the top of `upload_photo.py`
 3. Run:
 
