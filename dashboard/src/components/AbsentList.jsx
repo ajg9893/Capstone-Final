@@ -13,7 +13,7 @@ export default function AbsentList({ students }) {
         <div className="absent-grid">
           {students.map(s => (
             <div key={s.id} className="absent-chip">
-              <span>{s.name}</span> · {s.homeroom}
+              <span>{s.name}</span>
             </div>
           ))}
         </div>

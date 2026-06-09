@@ -73,7 +73,33 @@ def run_checkin():
         except:
             pass  # skip duplicate check in offline mode
 
-    # ── STEP 4: Capture live snapshot ───────────────
+    # ── STEP 4: Check whether a stored photo exists ─────────────────
+    photo_url = student.get("photoUrl") if student else None
+
+    # Try to pull a fresh copy from Firebase Storage if available
+    if photo_url:
+        try:
+            download_photo(photo_url, stored_photo_path)
+        except Exception:
+            print("⚠️  Could not download photo from Firebase — using local copy if available")
+
+    if not photo_url and not os.path.exists(stored_photo_path):
+        # No photo on file at all — skip the camera and check in directly.
+        # The student still shows up on the dashboard; the badge just says
+        # "no face verification" instead of "present/tardy".
+        print(f"ℹ️  No photo on file for {name} — checking in without face verification")
+        if student:
+            try:
+                status = log_attendance(student_id, name, verified=False)
+                now = datetime.now().strftime("%I:%M %p")
+                print(f"\n✅ {name} checked in at {now} — {status.upper()}")
+                print("   (face verification skipped — no photo enrolled)")
+            except Exception as e:
+                print(f"⚠️  Could not log attendance: {e}")
+        print("\n" + "="*50 + "\n")
+        return
+
+    # ── STEP 5: Capture live snapshot ───────────────
     print(f"\nHello {name}! Please look at the camera...")
     taken = capture_snapshot(SNAPSHOT_PATH)
 
@@ -81,22 +107,11 @@ def run_checkin():
         print("❌ No snapshot taken. Check-in cancelled.")
         return
 
-    # ── STEP 5: Download stored photo (or use local) ─
-    if student and student.get("photoUrl"):
-        try:
-            download_photo(student["photoUrl"], stored_photo_path)
-        except:
-            print("⚠️  Could not download photo from Firebase - using local copy")
-
-    if not os.path.exists(stored_photo_path):
-        print(f"❌ No stored photo found for {student_id}")
-        return
-
     # ── STEP 6: Compare faces ────────────────────────
     print("\n🔎 Comparing faces...")
     result = compare_faces(SNAPSHOT_PATH, stored_photo_path)
 
-    # ── STEP 7: Log attendance if verified ──────────
+    # ── STEP 7: Log attendance ───────────────────────
     if result["match"]:
         if student:
             try:
@@ -104,17 +119,17 @@ def run_checkin():
                 now = datetime.now().strftime("%I:%M %p")
                 print(f"\n🎉 Welcome, {name}!")
                 print(f"   Checked in at {now} — {status.upper()}")
-            except:
-                print(f"\n🎉 Welcome, {name}! (offline mode - not logged)")
+            except Exception:
+                print(f"\n🎉 Welcome, {name}! (offline mode — not logged)")
         else:
-            print(f"\n🎉 Face matched! (offline mode - not logged to Firebase)")
+            print(f"\n🎉 Face matched! (offline mode — not logged to Firebase)")
     else:
         print(f"\n🚨 Face mismatch for ID {student_id}!")
         print("   Please see the front desk.")
         if student:
             try:
                 log_attendance(student_id, name, verified=False)
-            except:
+            except Exception:
                 pass
 
     # ── STEP 8: Cleanup ──────────────────────────────

@@ -80,18 +80,22 @@ def set_session(active: bool):
 
 
 def check_already_checked_in(student_id: str) -> bool:
+    """Check if a student has already checked in today.
+    Filters only by studentId in Firestore to avoid needing a composite index,
+    then checks the timestamp in Python."""
     today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     records = (
         db.collection("attendance")
         .where(filter=FieldFilter("studentId", "==", student_id))
-        .where(filter=FieldFilter("timestamp", ">=", today_start))
         .stream()
     )
-    return any(True for _ in records)
+    return any(
+        r.to_dict().get("timestamp", datetime.min) >= today_start
+        for r in records
+    )
 
 
 def upload_student(student_id: str, name: str, grade: int, homeroom: str, photo_path: str):
-    """Add a new student to Firestore and upload their photo to Firebase Storage."""
 
     # Upload photo to Firebase Storage
     blob = bucket.blob(f"photos/{student_id}.jpg")

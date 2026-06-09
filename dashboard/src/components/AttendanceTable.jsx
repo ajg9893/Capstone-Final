@@ -11,7 +11,7 @@ function StatusBadge({ status, verified }) {
   return <span className="badge present">Present</span>;
 }
 
-export default function AttendanceTable({ records, statusFilter, setStatusFilter, homerooms, homeroom, setHomeroom }) {
+export default function AttendanceTable({ records, statusFilter, setStatusFilter }) {
   return (
     <div className="panel">
       <div className="panel-header">
@@ -29,16 +29,6 @@ export default function AttendanceTable({ records, statusFilter, setStatusFilter
               {f.charAt(0).toUpperCase() + f.slice(1)}
             </button>
           ))}
-          <select
-            className="homeroom-select"
-            value={homeroom}
-            onChange={e => setHomeroom(e.target.value)}
-          >
-            <option value="">All Homerooms</option>
-            {homerooms.map(h => (
-              <option key={h} value={h}>Homeroom {h}</option>
-            ))}
-          </select>
         </div>
       </div>
 

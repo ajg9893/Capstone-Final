@@ -1,5 +1,13 @@
+import { useState, useEffect } from "react";
+
 export default function Header({ session, onStart, onStop }) {
-  const now = new Date();
+  const [now, setNow] = useState(new Date());
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 60000); // update every minute
+    return () => clearInterval(id);
+  }, []);
+
   const dateStr = now.toLocaleDateString("en-US", {
     weekday: "long", year: "numeric", month: "long", day: "numeric",
   });

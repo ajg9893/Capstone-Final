@@ -28,9 +28,7 @@ def _serialize(doc_dict: dict) -> dict:
 def get_today_attendance():
     """
     Returns today's attendance records.
-    Optional query params:
-      ?status=present|tardy
-      ?homeroom=302
+    Optional query param: ?status=present|tardy
     """
     today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
@@ -42,20 +40,10 @@ def get_today_attendance():
         data["id"] = doc.id
         records.append(data)
 
-    # Filter in Python to avoid needing Firestore composite indexes
+    # Filter by status in Python to avoid needing a Firestore composite index
     status_filter = request.args.get("status")
     if status_filter:
         records = [r for r in records if r.get("status") == status_filter]
-
-    homeroom_filter = request.args.get("homeroom")
-    if homeroom_filter:
-        student_ids = {
-            d.id
-            for d in db.collection("students")
-                       .where(filter=FieldFilter("homeroom", "==", homeroom_filter))
-                       .stream()
-        }
-        records = [r for r in records if r.get("studentId") in student_ids]
 
     records.sort(key=lambda r: r.get("timestamp", ""), reverse=True)
     return jsonify(records)
@@ -82,18 +70,9 @@ def get_today_stats():
 
 @app.route("/api/students", methods=["GET"])
 def get_students():
-    """
-    Returns all enrolled students.
-    Optional query param: ?homeroom=302
-    """
-    query = db.collection("students")
-
-    homeroom_filter = request.args.get("homeroom")
-    if homeroom_filter:
-        query = query.where(filter=FieldFilter("homeroom", "==", homeroom_filter))
-
+    """Returns all enrolled students."""
     students = []
-    for doc in query.stream():
+    for doc in db.collection("students").stream():
         data = _serialize(doc.to_dict())
         data["id"] = doc.id
         students.append(data)
@@ -112,10 +91,7 @@ def get_student(student_id):
 
 @app.route("/api/attendance/absent", methods=["GET"])
 def get_absent_students():
-    """
-    Returns students who have NOT checked in today.
-    Optional query param: ?homeroom=302
-    """
+    """Returns students who have NOT checked in today."""
     today_start = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
 
     checked_in_ids = {
@@ -123,13 +99,8 @@ def get_absent_students():
         for doc in db.collection("attendance").where(filter=FieldFilter("timestamp", ">=", today_start)).stream()
     }
 
-    query = db.collection("students")
-    homeroom_filter = request.args.get("homeroom")
-    if homeroom_filter:
-        query = query.where(filter=FieldFilter("homeroom", "==", homeroom_filter))
-
     absent = []
-    for doc in query.stream():
+    for doc in db.collection("students").stream():
         if doc.id not in checked_in_ids:
             data = _serialize(doc.to_dict())
             data["id"] = doc.id
