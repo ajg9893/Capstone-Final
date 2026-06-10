@@ -10,6 +10,24 @@ body {
 /* ── Layout ─────────────────────────────────────────── */
 .app { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
 
+/* ── API offline banner ──────────────────────────────── */
+.api-banner {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  color: #92400e;
+  padding: 10px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+.api-banner code {
+  background: #fde68a;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+}
+
 /* ── Header ─────────────────────────────────────────── */
 .header {
   display: flex;

@@ -1,8 +1,13 @@
 function formatTime(isoStr) {
   if (!isoStr) return "—";
-  return new Date(isoStr).toLocaleTimeString("en-US", {
-    hour: "numeric", minute: "2-digit", hour12: true,
-  });
+  // Python stores datetime.now() as local time with no timezone suffix.
+  // JS would treat a bare ISO string as UTC and shift it by the UTC offset.
+  // Parsing the components directly keeps the time in local time.
+  const [datePart, timePart] = isoStr.split("T");
+  const [y, mo, d]           = datePart.split("-").map(Number);
+  const [h, mi, s]           = timePart.split(":").map(Number);
+  return new Date(y, mo - 1, d, h, mi, Math.floor(s || 0))
+    .toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
 }
 
 function StatusBadge({ status, verified }) {

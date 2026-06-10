@@ -14,6 +14,7 @@ export default function App() {
   const [records, setRecords]           = useState([]);
   const [absent, setAbsent]             = useState([]);
   const [statusFilter, setStatusFilter] = useState("all");
+  const [apiOnline, setApiOnline]       = useState(true);
 
   // ── Fetch all data ──────────────────────────────────────────────
   const fetchAll = useCallback(async () => {
@@ -27,7 +28,9 @@ export default function App() {
       setSession((await sessionRes.json()).active ?? false);
       setStats(await statsRes.json());
       setAbsent(await absentRes.json());
+      setApiOnline(true);
     } catch (err) {
+      setApiOnline(false);
       console.error("Fetch error:", err);
     }
   }, []);
@@ -57,17 +60,31 @@ export default function App() {
 
   // ── Session controls ────────────────────────────────────────────
   const startSession = async () => {
-    await fetch(`${API}/session/start`, { method: "POST" });
-    setSession(true);
+    try {
+      await fetch(`${API}/session/start`, { method: "POST" });
+      setSession(true);
+    } catch {
+      alert("Cannot reach the API — make sure app.py is running.");
+    }
   };
 
   const stopSession = async () => {
-    await fetch(`${API}/session/stop`, { method: "POST" });
-    setSession(false);
+    try {
+      await fetch(`${API}/session/stop`, { method: "POST" });
+      setSession(false);
+    } catch {
+      alert("Cannot reach the API — make sure app.py is running.");
+    }
   };
 
   return (
     <div className="app">
+      {!apiOnline && (
+        <div className="api-banner">
+          ⚠️ Cannot reach the API — make sure <code>app.py</code> is running
+        </div>
+      )}
+
       <Header session={session} onStart={startSession} onStop={stopSession} />
 
       <StatsBar
